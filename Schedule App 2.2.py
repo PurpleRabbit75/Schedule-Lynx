@@ -22,11 +22,6 @@ if (OUTPUT_DIRECTORY == ""):
 
 START_TIME = time.time()
 
-grid = [] # The grid will be a 2D array of RGB tuples
-names = [] # List of tuples in the form (name, (R, G, B))
-DATA_AS_STRINGS = [] # List of data files, converted to strings for parsing into lists by ast
-
-
 COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
 (220, 20, 60), # Crimson
 (255, 69, 0), # Orange Red
@@ -51,18 +46,14 @@ WIDTH = 1850 + 180 + 5 * TIME_COLUMN_WIDTH # was 3600 # then was 1800
 HEIGHT = (len(TIMES) + 1) * 15 + SPACERPIXELS # (len(TIMES) + 1) rows * 15 pixels/row
 TEXT_FONT_SIZE = 13
 
+grid = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
+names = [] # List of tuples in the form (name, (R, G, B))
+DATA_AS_STRINGS = [] # List of data files, converted to strings for parsing into lists by ast
+
+
+
+
 #------------------------------ FUNCTIONS ------------------------------#
-
-def makeBlankGrid():
-    global WIDTH, HEIGHT, grid
-    for i in range(WIDTH): 
-        l = []
-        for j in range(HEIGHT): 
-            l.append((255, 255, 255))
-        grid.append(l)
-
-makeBlankGrid()
-
 
 def addName(name):
     names.append((name, COLORS[len(names)]))
