@@ -6,7 +6,6 @@ from ImageLib2 import *
 from ListLib import *
 import time
 import os
-import ast
 
 
 
@@ -141,13 +140,14 @@ def importData():
         print(filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
             file = readJSON(filename)
-            DATA_AS_STRINGS.append(json.dumps(file))
+            #DATA_AS_STRINGS.append(json.dumps(file))
+            DATA_AS_STRINGS.append(file)
 
 
     print("Writing data to image...")
     print("Elapsed time:", time.time()- START_TIME, "s")
     for i in DATA_AS_STRINGS:
-        i = ast.literal_eval(i)
+        # i = ast.literal_eval(i)
         addName(i[0])
     
 
@@ -228,7 +228,8 @@ def main():
 
     importData()
     for i in DATA_AS_STRINGS:
-        writeFile(eval(i))
+        #writeFile(eval(i))
+        writeFile(i)
     img = linesAndText()
     img.show()
     print("Saving...")
