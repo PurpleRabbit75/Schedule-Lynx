@@ -14,7 +14,7 @@ import os
 # Get user input for where to find and save files
 DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
 if (DATA_DIRECTORY == ""):
-    DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__"
+    DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__" # Note that this assumes Windows OS. For a Linux machine, write "~/.__Scheduler App Data__"
 OUTPUT_DIRECTORY = input("Enter the output directory path:\n")
 if (OUTPUT_DIRECTORY == ""):
     OUTPUT_DIRECTORY = "C:/Users/" + os.getlogin() + "/Desktop"
@@ -36,6 +36,7 @@ COLORS = [ # These colors were selected from the standard CSS Colors, also calle
 (169, 169, 169) # Dark Gray
 ]
 
+# Adding or subtracting from this list will change the time slots on the output image with no other code changes needed
 TIMES = ["7:00 AM", "7:15 AM", "7:30 AM", "7:45 AM", "8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM", "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM", "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM", "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM", "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM", "8:00 PM", "8:15 PM", "8:30 PM", "8:45 PM", "9:00 PM", "9:15 PM", "9:30 PM", "9:45 PM", "10:00 PM"] # len = 162-4
 
 # Declare global variables having to do with output image spacing, size, and formatting
@@ -98,17 +99,10 @@ def addClass(name, startTime, stopTime, daysStr):
 # The days of the week are "MTWRF"
     def dayStrToList(string):
         "Take a string of format 'MTWRF' and convert it to a list of mixed numbers equal to their index + 1 (if the day is present in the string) and else = False."
-        output = [False, False, False, False, False]
-        if ("M" in string):
-            output[0] = 1
-        if ("T" in string):
-            output[1] = 2
-        if ("W" in string):
-            output[2] = 3
-        if ("R" in string):
-            output[3] = 4
-        if ("F" in string):
-            output[4] = 5
+        output = [False] * 5
+        for i, day in enumerate('MTWRF'):
+            if day in string:
+                output[i] = i + 1
         return output
     
 
