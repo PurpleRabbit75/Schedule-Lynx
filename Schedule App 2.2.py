@@ -30,20 +30,17 @@ names = []
 stringDotCLASSES = []
 
 COLORS = [
-#(139, 0, 0),
 (220, 20, 60),
 (255, 69, 0),
 (255, 140, 0),
-#(255, 165, 0),
 (255, 215, 0),
 (50, 205, 50),
-#maybe another green (darkish)
-(30, 144, 255),# or rgb(65, 105, 225)
+(30, 144, 255),
 (0, 0, 205),
 (75, 0, 130),
 (138, 43, 226),
 (255, 105, 180),
-(160, 82, 45),# or rgb(139, 69, 19)
+(160, 82, 45),
 (169, 169, 169)
 ]
 
@@ -107,16 +104,11 @@ times = [
         "9:00 PM",
         "9:15 PM",
         "9:30 PM",
-        # "9:45 PM",
-        # "10:00 PM",
-        # "10:15 PM",
-        # "10:30 PM",
         ] # len = 162-4
 
 
 
 def addName(name):
-    # print("len(names) =", len(names))
     names.append((name, COLORS[len(names)]))
 
 
@@ -197,9 +189,6 @@ def importData():
     print("Loading file info...")
     print("Elapsed time:", time.time()-start, "s")
 
-# "C:\Users\abrah\.__Scheduler App Data__"
-    # for filename in os.listdir(os.path.join(os.getcwd(), ".__Scheduler App Data__")):
-    #     filename = os.path.join(os.getcwd(), ".__Scheduler App Data__", filename)
     for filename in os.listdir("C:/Users/abrah/.__Scheduler App Data__"):
         filename = os.path.join("C:/Users/abrah/.__Scheduler App Data__", filename)
         print(filename)
