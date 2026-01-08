@@ -4,16 +4,17 @@ import time
 import os
 import ast
 
-start = time.time()
 
 grid = []
-
 TIME_COLUMN_WIDTH = 73
 SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
 WIDTH = 1850+180 + 5*TIME_COLUMN_WIDTH # was 3600 # then was 1800
 HEIGHT = 60*15 + SPACERPIXELS # 60 rows * 15 pixels/row
 TEXT_FONT_SIZE = 13
-
+DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
+if (DATA_DIRECTORY == ""):
+    DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__"
+start = time.time()
 
 
 def makeBlankGrid():
@@ -189,10 +190,10 @@ def importData():
     print("Loading file info...")
     print("Elapsed time:", time.time()-start, "s")
 
-    for filename in os.listdir("C:/Users/abrah/.__Scheduler App Data__"):
-        filename = os.path.join("C:/Users/abrah/.__Scheduler App Data__", filename)
+    for filename in os.listdir(DATA_DIRECTORY):
+        filename = os.path.join(DATA_DIRECTORY, filename)
         print(filename)
-        if (filename != "C:/Users/abrah/.__Scheduler App Data__\\Scheduler App Archives"):
+        if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
             with open(filename, "r") as inputDocument:
                 file = inputDocument.read()
                 file = file.replace("\n", "").replace(" ", "").replace("\t", "")
