@@ -21,6 +21,9 @@ TEXT_FONT_SIZE = 13
 DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
 if (DATA_DIRECTORY == ""):
     DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__"
+OUTPUT_DIRECTORY = input("Enter the output directory path:\n")
+if (OUTPUT_DIRECTORY == ""):
+    OUTPUT_DIRECTORY = "C:/Users/" + os.getlogin() + "/Desktop"
 
 START_TIME = time.time()
 
@@ -43,68 +46,7 @@ COLORS = [
 (169, 169, 169)
 ]
 
-TIMES = [
-        "7:00 AM",
-        "7:15 AM",
-        "7:30 AM",
-        "7:45 AM",
-        "8:00 AM",
-        "8:15 AM",
-        "8:30 AM",
-        "8:45 AM",
-        "9:00 AM",
-        "9:15 AM",
-        "9:30 AM",
-        "9:45 AM",
-        "10:00 AM",
-        "10:15 AM",
-        "10:30 AM",
-        "10:45 AM",
-        "11:00 AM",
-        "11:15 AM",
-        "11:30 AM",
-        "11:45 AM",
-        "12:00 PM",
-        "12:15 PM",
-        "12:30 PM",
-        "12:45 PM",
-        "1:00 PM",
-        "1:15 PM",
-        "1:30 PM",
-        "1:45 PM",
-        "2:00 PM",
-        "2:15 PM",
-        "2:30 PM",
-        "2:45 PM",
-        "3:00 PM",
-        "3:15 PM",
-        "3:30 PM",
-        "3:45 PM",
-        "4:00 PM",
-        "4:15 PM",
-        "4:30 PM",
-        "4:45 PM",
-        "5:00 PM",
-        "5:15 PM",
-        "5:30 PM",
-        "5:45 PM",
-        "6:00 PM",
-        "6:15 PM",
-        "6:30 PM",
-        "6:45 PM",
-        "7:00 PM",
-        "7:15 PM",
-        "7:30 PM",
-        "7:45 PM",
-        "8:00 PM",
-        "8:15 PM",
-        "8:30 PM",
-        "8:45 PM",
-        "9:00 PM",
-        "9:15 PM",
-        "9:30 PM",
-        ] # len = 162-4
-
+TIMES = ["7:00 AM", "7:15 AM", "7:30 AM", "7:45 AM", "8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM", "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM", "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM", "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM", "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM", "8:00 PM", "8:15 PM", "8:30 PM", "8:45 PM", "9:00 PM", "9:15 PM", "9:30 PM"] # len = 162-4
 
 
 #------------------------------ FUNCTIONS ------------------------------#
@@ -302,7 +244,7 @@ def main():
     img = linesAndText()
     img.show()
     print("Saving...")
-    img.save("C:/Users/abrah/Desktop/scheduleTest.jpg")
+    img.save(OUTPUT_DIRECTORY + "/scheduleTest.jpg")
 
     print("Elapsed time:", time.time()- START_TIME, "s")
     print("PROGRAM HAS TERMINATED")
