@@ -12,13 +12,6 @@ import ast
 
 #------------------------------ GLOBAL VARIABLES ------------------------------#    
 
-# Declare global variables having to do with output image spacing, size, and formatting
-TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
-SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
-WIDTH = 1850 + 180 + 5*TIME_COLUMN_WIDTH # was 3600 # then was 1800
-HEIGHT = 62*15 + SPACERPIXELS # 62 rows * 15 pixels/row
-TEXT_FONT_SIZE = 13
-
 # Get user input for where to find and save files
 DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
 if (DATA_DIRECTORY == ""):
@@ -33,7 +26,8 @@ grid = [] # The grid will be a 2D array of RGB tuples
 names = [] # List of tuples in the form (name, (R, G, B))
 DATA_AS_STRINGS = [] # List of data files, converted to strings for parsing into lists by ast
 
-COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors
+
+COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
 (220, 20, 60), # Crimson
 (255, 69, 0), # Orange Red
 (255, 140, 0), # Dark Orange
@@ -50,6 +44,12 @@ COLORS = [ # These colors were selected from the standard CSS Colors, also calle
 
 TIMES = ["7:00 AM", "7:15 AM", "7:30 AM", "7:45 AM", "8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM", "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM", "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM", "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM", "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM", "8:00 PM", "8:15 PM", "8:30 PM", "8:45 PM", "9:00 PM", "9:15 PM", "9:30 PM", "9:45 PM", "10:00 PM"] # len = 162-4
 
+# Declare global variables having to do with output image spacing, size, and formatting
+TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
+SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
+WIDTH = 1850 + 180 + 5 * TIME_COLUMN_WIDTH # was 3600 # then was 1800
+HEIGHT = (len(TIMES) + 1) * 15 + SPACERPIXELS # (len(TIMES) + 1) rows * 15 pixels/row
+TEXT_FONT_SIZE = 13
 
 #------------------------------ FUNCTIONS ------------------------------#
 
