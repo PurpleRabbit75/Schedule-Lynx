@@ -47,7 +47,7 @@ TEXT_FONT_SIZE = 13
 
 grid = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
 names = [] # List of tuples in the form (name, (R, G, B))
-DATA_AS_STRINGS = [] # List of data files, converted to strings for parsing into lists by ast
+DATA_LIST = [] # List of data files, formatted as lists from the JSON converter
 
 
 
@@ -130,7 +130,7 @@ def writeFile(data):
 
 
 def importData():
-    global DATA_AS_STRINGS
+    global DATA_LIST
     print("Loading file info...")
     print("Elapsed time:", time.time()- START_TIME, "s")
 
@@ -140,14 +140,12 @@ def importData():
         print(filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
             file = readJSON(filename)
-            #DATA_AS_STRINGS.append(json.dumps(file))
-            DATA_AS_STRINGS.append(file)
+            DATA_LIST.append(file)
 
 
     print("Writing data to image...")
     print("Elapsed time:", time.time()- START_TIME, "s")
-    for i in DATA_AS_STRINGS:
-        # i = ast.literal_eval(i)
+    for i in DATA_LIST:
         addName(i[0])
     
 
@@ -224,11 +222,10 @@ def linesAndText():
 
 
 def main():
-    global DATA_AS_STRINGS
+    global DATA_LIST
 
     importData()
-    for i in DATA_AS_STRINGS:
-        #writeFile(eval(i))
+    for i in DATA_LIST:
         writeFile(i)
     img = linesAndText()
     img.show()
