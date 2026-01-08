@@ -12,12 +12,14 @@ import ast
 
 #------------------------------ GLOBAL VARIABLES ------------------------------#    
 
-
-TIME_COLUMN_WIDTH = 73
+# Declare global variables having to do with output image spacing, size, and formatting
+TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
 SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
-WIDTH = 1850+180 + 5*TIME_COLUMN_WIDTH # was 3600 # then was 1800
-HEIGHT = 60*15 + SPACERPIXELS # 60 rows * 15 pixels/row
+WIDTH = 1850 + 180 + 5*TIME_COLUMN_WIDTH # was 3600 # then was 1800
+HEIGHT = 62*15 + SPACERPIXELS # 62 rows * 15 pixels/row
 TEXT_FONT_SIZE = 13
+
+# Get user input for where to find and save files
 DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
 if (DATA_DIRECTORY == ""):
     DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__"
@@ -27,26 +29,26 @@ if (OUTPUT_DIRECTORY == ""):
 
 START_TIME = time.time()
 
-grid = []
-names = []
-DATA_AS_STRINGS = []
+grid = [] # The grid will be a 2D array of RGB tuples
+names = [] # List of tuples in the form (name, (R, G, B))
+DATA_AS_STRINGS = [] # List of data files, converted to strings for parsing into lists by ast
 
-COLORS = [
-(220, 20, 60),
-(255, 69, 0),
-(255, 140, 0),
-(255, 215, 0),
-(50, 205, 50),
-(30, 144, 255),
-(0, 0, 205),
-(75, 0, 130),
-(138, 43, 226),
-(255, 105, 180),
-(160, 82, 45),
-(169, 169, 169)
+COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors
+(220, 20, 60), # Crimson
+(255, 69, 0), # Orange Red
+(255, 140, 0), # Dark Orange
+(255, 215, 0), # Gold
+(50, 205, 50), # Lime Green
+(30, 144, 255), # Dodger Blue
+(0, 0, 205), # Medium Blue
+(75, 0, 130), # Indigo
+(138, 43, 226), # Blue Violet
+(255, 105, 180), # Hot Pink
+(160, 82, 45), # Sienna
+(169, 169, 169) # Dark Gray
 ]
 
-TIMES = ["7:00 AM", "7:15 AM", "7:30 AM", "7:45 AM", "8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM", "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM", "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM", "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM", "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM", "8:00 PM", "8:15 PM", "8:30 PM", "8:45 PM", "9:00 PM", "9:15 PM", "9:30 PM"] # len = 162-4
+TIMES = ["7:00 AM", "7:15 AM", "7:30 AM", "7:45 AM", "8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM", "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM", "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM", "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM", "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM", "8:00 PM", "8:15 PM", "8:30 PM", "8:45 PM", "9:00 PM", "9:15 PM", "9:30 PM", "9:45 PM", "10:00 PM"] # len = 162-4
 
 
 #------------------------------ FUNCTIONS ------------------------------#
