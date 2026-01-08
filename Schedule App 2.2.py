@@ -22,11 +22,11 @@ DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n
 if (DATA_DIRECTORY == ""):
     DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__"
 
-start = time.time()
+START_TIME = time.time()
 
 grid = []
 names = []
-stringDotCLASSES = []
+DATA_AS_STRINGS = []
 
 COLORS = [
 (220, 20, 60),
@@ -43,7 +43,7 @@ COLORS = [
 (169, 169, 169)
 ]
 
-times = [
+TIMES = [
         "7:00 AM",
         "7:15 AM",
         "7:30 AM",
@@ -197,9 +197,9 @@ def writeFile(data):
 
 
 def importData():
-    global stringDotCLASSES
+    global DATA_AS_STRINGS
     print("Loading file info...")
-    print("Elapsed time:", time.time()-start, "s")
+    print("Elapsed time:", time.time()- START_TIME, "s")
 
     for filename in os.listdir(DATA_DIRECTORY):
         filename = os.path.join(DATA_DIRECTORY, filename)
@@ -208,11 +208,11 @@ def importData():
             with open(filename, "r") as inputDocument:
                 file = inputDocument.read()
                 file = file.replace("\n", "").replace(" ", "").replace("\t", "")
-                stringDotCLASSES.append(file)
+                DATA_AS_STRINGS.append(file)
 
     print("Writing data to image...")
-    print("Elapsed time:", time.time()-start, "s")
-    for i in stringDotCLASSES:
+    print("Elapsed time:", time.time()- START_TIME, "s")
+    for i in DATA_AS_STRINGS:
         i = ast.literal_eval(i)
         addName(i[0])
 
@@ -251,7 +251,7 @@ def linesAndText():
 
     def drawHorizontalLines():
         global SPACERPIXELS
-        for i in range(len(times) + int(SPACERPIXELS/15)):
+        for i in range(len(TIMES) + int(SPACERPIXELS/15)):
             i *= 15
             if (i % 2 == 0):
                 for j in range(WIDTH):
@@ -274,16 +274,16 @@ def linesAndText():
     
 
     def writeTimeText(img, xPos):
-        global WIDTH, times, SPACERPIXELS
-        for i in range(len(times)):
+        global WIDTH, TIMES, SPACERPIXELS
+        for i in range(len(TIMES)):
             if (i % 2 == 0):
-                writeText(img, times[i], (xPos + 10, i * 15 + SPACERPIXELS + 7.5), fontSize = TEXT_FONT_SIZE)
+                writeText(img, TIMES[i], (xPos + 10, i * 15 + SPACERPIXELS + 7.5), fontSize = TEXT_FONT_SIZE)
     print("Writing grid into image")
-    print("Elapsed time:", time.time()-start, "s")
+    print("Elapsed time:", time.time()- START_TIME, "s")
     drawDayLines()
     drawHorizontalLines()
     print("Completing the formatting...")
-    print("Elapsed time:", time.time()-start, "s")
+    print("Elapsed time:", time.time()- START_TIME, "s")
     img = toImage(grid)
     for i in range(5):
         writeTimeText(img, (400 + TIME_COLUMN_WIDTH) * i)
@@ -294,17 +294,17 @@ def linesAndText():
 
 
 def main():
-    global stringDotCLASSES
+    global DATA_AS_STRINGS
 
     importData()
-    for i in stringDotCLASSES:
+    for i in DATA_AS_STRINGS:
         writeFile(eval(i))
     img = linesAndText()
     img.show()
     print("Saving...")
     img.save("C:/Users/abrah/Desktop/scheduleTest.jpg")
 
-    print("Elapsed time:", time.time()-start, "s")
+    print("Elapsed time:", time.time()- START_TIME, "s")
     print("PROGRAM HAS TERMINATED")
 
 
