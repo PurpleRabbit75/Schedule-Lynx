@@ -52,11 +52,11 @@ DATA_AS_STRINGS = [] # List of data files, converted to strings for parsing into
 
 
 
-
 #------------------------------ FUNCTIONS ------------------------------#
 
 def addName(name):
     names.append((name, COLORS[len(names)]))
+
 
 
 def addClass(name, startTime, stopTime, daysStr):
@@ -96,6 +96,7 @@ def addClass(name, startTime, stopTime, daysStr):
 
 
 
+# The days of the week are "MTWRF"
     def dayStrToList(string):
         "Take a string of format 'MTWRF' and convert it to a list of mixed numbers equal to their index + 1 (if the day is present in the string) and else = False."
         output = [False, False, False, False, False]
@@ -122,19 +123,18 @@ def addClass(name, startTime, stopTime, daysStr):
 
     
 
-# The days of the week are "MTWRF"
-
-
 def writeFile(data):
     name = data[0]
     for i in range(1, len(data)):
         addClass(name, data[i][0], data[i][1], data[i][2])
 
 
+
 def importData():
     global DATA_AS_STRINGS
     print("Loading file info...")
     print("Elapsed time:", time.time()- START_TIME, "s")
+
 
     for filename in os.listdir(DATA_DIRECTORY):
         filename = os.path.join(DATA_DIRECTORY, filename)
@@ -145,6 +145,7 @@ def importData():
                 file = file.replace("\n", "").replace(" ", "").replace("\t", "")
                 DATA_AS_STRINGS.append(file)
 
+
     print("Writing data to image...")
     print("Elapsed time:", time.time()- START_TIME, "s")
     for i in DATA_AS_STRINGS:
@@ -153,11 +154,8 @@ def importData():
 
 
 
-
-
 def linesAndText():
 
-    
 
     def drawDayLines():
         global TIME_COLUMN_WIDTH
@@ -182,8 +180,6 @@ def linesAndText():
                         grid[j+4][k] = (0, 0, 0)
 
 
-
-
     def drawHorizontalLines():
         global SPACERPIXELS
         for i in range(len(TIMES) + int(SPACERPIXELS/15)):
@@ -193,14 +189,12 @@ def linesAndText():
                     grid[j][i] = (0, 0, 0)
         
 
-
     def writeNameText(names, img):
         global TIME_COLUMN_WIDTH
         for day in range(5):
             for i in range(len(names)):
                 writeText(img, names[i][0], (TIME_COLUMN_WIDTH*(day+1) + 10 + 400/len(names)*i + 400*day, 1+15), fontSize = TEXT_FONT_SIZE)    
     
-
 
     def writeWeekdayText(img):
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
@@ -213,6 +207,8 @@ def linesAndText():
         for i in range(len(TIMES)):
             if (i % 2 == 0):
                 writeText(img, TIMES[i], (xPos + 10, i * 15 + SPACERPIXELS + 7.5), fontSize = TEXT_FONT_SIZE)
+
+                
     print("Writing grid into image")
     print("Elapsed time:", time.time()- START_TIME, "s")
     drawDayLines()
