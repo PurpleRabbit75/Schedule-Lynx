@@ -4,6 +4,7 @@ import pandas
 import numpy as np
 import pickle
 import ast
+import json
 
 # Example of a file path:
 # "/home/adam/Desktop/This is my txt file!"
@@ -369,6 +370,17 @@ def splitAtIndex(string, index):
 
 def toList(string_of_list):
     return ast.literal_eval(string_of_list)
+
+
+def readJSON(path):
+    with open(path, 'r') as jsonFile:
+        data = json.load(jsonFile)
+    return data
+
+
+def writeJSON(data, path):
+    with open(path, 'w') as jsonFile:
+        json.dump(data, jsonFile)
 
 
 

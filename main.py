@@ -140,10 +140,8 @@ def importData():
         filename = os.path.join(DATA_DIRECTORY, filename)
         print(filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
-            with open(filename, "r") as inputDocument:
-                file = inputDocument.read()
-                file = file.replace("\n", "").replace(" ", "").replace("\t", "")
-                DATA_AS_STRINGS.append(file)
+            file = readJSON(filename)
+            DATA_AS_STRINGS.append(json.dumps(file))
 
 
     print("Writing data to image...")
@@ -151,6 +149,7 @@ def importData():
     for i in DATA_AS_STRINGS:
         i = ast.literal_eval(i)
         addName(i[0])
+    
 
 
 
