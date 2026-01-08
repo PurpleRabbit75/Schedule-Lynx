@@ -1,3 +1,7 @@
+### Schedule Lynx App ###
+
+#------------------------------ IMPORTS ------------------------------#
+
 from ImageLib2 import *
 from ListLib import *
 import time
@@ -5,7 +9,10 @@ import os
 import ast
 
 
-grid = []
+
+#------------------------------ GLOBAL VARIABLES ------------------------------#    
+
+
 TIME_COLUMN_WIDTH = 73
 SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
 WIDTH = 1850+180 + 5*TIME_COLUMN_WIDTH # was 3600 # then was 1800
@@ -14,19 +21,10 @@ TEXT_FONT_SIZE = 13
 DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
 if (DATA_DIRECTORY == ""):
     DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__"
+
 start = time.time()
 
-
-def makeBlankGrid():
-    global WIDTH, HEIGHT, grid
-    for i in range(WIDTH): 
-        l = []
-        for j in range(HEIGHT): 
-            l.append((255, 255, 255))
-        grid.append(l)
-
-makeBlankGrid()
-
+grid = []
 names = []
 stringDotCLASSES = []
 
@@ -107,6 +105,19 @@ times = [
         "9:30 PM",
         ] # len = 162-4
 
+
+
+#------------------------------ FUNCTIONS ------------------------------#
+
+def makeBlankGrid():
+    global WIDTH, HEIGHT, grid
+    for i in range(WIDTH): 
+        l = []
+        for j in range(HEIGHT): 
+            l.append((255, 255, 255))
+        grid.append(l)
+
+makeBlankGrid()
 
 
 def addName(name):
