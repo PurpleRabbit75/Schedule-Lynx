@@ -48,11 +48,11 @@ Once you have created the folder with your `person.json` files, copy the file pa
 
 - Set the portion after the colon of this parameter to the path you just copied:
 ```
-"data_directory": "C:\\Users\\abrah\\.__Scheduler App Data__",
+"data_directory": "C:/Users/abrah/.__Scheduler App Data__",
 ```
 - Choose a file path for the new .jpg file that the program will create. Put this file path in the place of the filepath in
 ```
- "output_path": "C:\\Users\\abrah\\Desktop\\scheduleTest.jpg"
+ "output_path": "C:/Users/abrah/Desktop/scheduleTest.jpg"
  ```
 
  You may later choose to adjust the other parameters as you see fit. More about each parameter will be explained in the technical appendix. 
@@ -67,3 +67,9 @@ Once you have created the folder with your `person.json` files, copy the file pa
  # Technical Appendix
 
 If you are reading this, I assume that you know what you're doing around .py and .json files, have some experience with coding, etc. 
+
+## Miscellaneous Notes:
+
+- You can expand this for an arbitrary number of people by adding more entries to colors.json. 
+
+- This system is agnostic to the difference between \ and / when it comes to filepaths, but \ must be escaped in both JSON and Python.
