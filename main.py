@@ -9,17 +9,15 @@ import os
 
 
 
-#------------------------------ GLOBAL VARIABLES ------------------------------#    
+#------------------------------ GLOBAL VARIABLES [USER PREFERENCES] ------------------------------#    
 
 # Get user input for where to find and save files
 DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
 if (DATA_DIRECTORY == ""):
-    DATA_DIRECTORY = "C:/Users/" + os.getlogin() + "/.__Scheduler App Data__" # Note that this assumes Windows OS. For a Linux machine, write "~/.__Scheduler App Data__"
+    DATA_DIRECTORY = "C:\\Users\\" + os.getlogin() + "\\.__Scheduler App Data__" # Note that this assumes Windows OS. For a Linux machine, write "~/.__Scheduler App Data__"
 OUTPUT_DIRECTORY = input("Enter the output directory path:\n")
 if (OUTPUT_DIRECTORY == ""):
-    OUTPUT_DIRECTORY = "C:/Users/" + os.getlogin() + "/Desktop"
-
-APPLICATION_START_TIME = time.time()
+    OUTPUT_DIRECTORY = "C:\\Users\\" + os.getlogin() + "\\Desktop"
 
 COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
 (220, 20, 60), # Crimson
@@ -36,6 +34,15 @@ COLORS = [ # These colors were selected from the standard CSS Colors, also calle
 (169, 169, 169) # Dark Gray
 ]
 
+FONT_SIZE = 13
+START_TIME = [7, 0] # 7:00 AM
+END_TIME = [22, 0] # 10:00 PM
+SPACER_PIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
+
+
+
+#------------------------------ GLOBAL VARIABLES [PROGRAM USE ONLY - DO NOT EDIT] ------------------------------# 
+  
 def generate_times(start_time, end_time):
     times = []
     start_min = start_time[0] * 60 + start_time[1]
@@ -61,73 +68,69 @@ def generate_times(start_time, end_time):
         current += 15
     return times
 
-# Adding or subtracting from this list will change the time slots on the output image with no other code changes needed
-
-
-# Declare global variables having to do with output image spacing, size, and formatting
-TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
-SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
-TEXT_FONT_SIZE = 13
-START_TIME = [7, 0] # 7:00 AM
-END_TIME = [22, 0] # 10:00 PM
 TIMES = generate_times(START_TIME, END_TIME)
-WIDTH = 1850 + 180 + 5 * TIME_COLUMN_WIDTH # was 3600 # then was 1800
-HEIGHT = (len(TIMES) + 1) * 15 + SPACERPIXELS # (len(TIMES) + 1) rows * 15 pixels/row
+_TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
+WIDTH = 1850 + 180 + 5 * _TIME_COLUMN_WIDTH # was 3600 # then was 1800
+HEIGHT = (len(TIMES) + 1) * 15 + SPACER_PIXELS # (len(TIMES) + 1) rows * 15 pixels/row
+_APPLICATION_START_TIME = time.time()
+_GRID = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
+_NAMES = [] # List of tuples in the form (name, (R, G, B))
+_DATA_LIST = [] # List of data files, formatted as lists from the JSON converter
 
-grid = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
-names = [] # List of tuples in the form (name, (R, G, B))
-DATA_LIST = [] # List of data files, formatted as lists from the JSON converter
+
 
 
 
 #------------------------------ FUNCTIONS ------------------------------#
 
-def addName(name):
-    names.append((name, COLORS[len(names)]))
+def add_name(name):
+    _NAMES.append((name, COLORS[len(_NAMES)]))
 
 
 
-def addClass(name, startTime, stopTime, daysStr):
-    global names
+def add_time_block(name, startTime, stopTime, daysStr):
+    "Add a time block to the schedule for a given name, start and stop times, and days string."
+    global _NAMES
 
+    def define_block(startTime, stopTime, columnNo, weekday):
+        "Define the coordinates of a time block given start and stop times, column number, and weekday."
 
-    def defineBlock(startTime, stopTime, columnNo, weekday):
-        
-        def timeToY(time):
-            "Convert a time in [hours, minutes] format to a y coordinate on the image grid."
-            global SPACERPIXELS, TIME_COLUMN_WIDTH
+        def time_to_y(time):
+            "Convert a time in [hours, minutes] format to a y coordinate on the image _GRID."
+            global SPACER_PIXELS, _TIME_COLUMN_WIDTH
             hours, minutes = time  
             hours -= START_TIME[0]      
             minutes += 60 * hours
             minutes -= START_TIME[1]
             y = minutes 
             y = int(y)
-            y = y + SPACERPIXELS
+            y = y + SPACER_PIXELS
             return y
 
-        startY = timeToY(startTime)
-        stopY = timeToY(stopTime)
+        startY = time_to_y(startTime)
+        stopY = time_to_y(stopTime)
 
-        startX = 400/len(names) * columnNo + TIME_COLUMN_WIDTH * (weekday+1) + 400*weekday
-        stopX = startX + 400/len(names)
+        startX = 400/len(_NAMES) * columnNo + _TIME_COLUMN_WIDTH * (weekday+1) + 400*weekday
+        stopX = startX + 400/len(_NAMES)
 
         return [(startX, startY), (stopX, stopY)]
 
 
-    def drawBlock(coordinates, rgb):
-        global grid
+    def draw_block(coordinates, rgb):
+        "Draw a block on the _GRID given coordinates and an RGB color."
+        global _GRID
         xi, xf, yi, yf = coordinates[0][0], coordinates[1][0], coordinates[0][1], coordinates[1][1]
         
-        for i in range(len(grid)):
-            for j in range(len(grid[0])):
+        for i in range(len(_GRID)):
+            for j in range(len(_GRID[0])):
                 if (i >= xi and i <= xf):
                     if (j >= yi and j <= yf):
-                        grid[i][j] = rgb
+                        _GRID[i][j] = rgb
 
 
 
-# The days of the week are "MTWRF"
-    def dayStrToList(string):
+# The days of the working week are "MTWRF"
+    def dayStr2list(string):
         "Take a string of format 'MTWRF' and convert it to a list of mixed numbers equal to their index + 1 (if the day is present in the string) and else = False."
         output = [False] * 5
         for i, day in enumerate('MTWRF'):
@@ -136,127 +139,128 @@ def addClass(name, startTime, stopTime, daysStr):
         return output
     
 
-    daysList = dayStrToList(daysStr)
+    daysList = dayStr2list(daysStr)
 
-    for i in range(0,len(names)):
+    for i in range(0, len(_NAMES)):
         for j in range(0,5):
-            if (name == names[i][0]):
+            if (name == _NAMES[i][0]):
                 if(daysList[j] != False):
-                    drawBlock(defineBlock(startTime, stopTime, i, daysList[j]-1), names[i][1])
+                    draw_block(define_block(startTime, stopTime, i, daysList[j]-1), _NAMES[i][1])
 
     
 
-def writeFile(data):
+def write_to_image(data):
+    "Write a single data file's information to the image _GRID. Data is in the form [name, [startTime, stopTime, daysStr, description], ...]"
     name = data[0]
     for i in range(1, len(data)):
-        addClass(name, data[i][0], data[i][1], data[i][2])
+        add_time_block(name, data[i][0], data[i][1], data[i][2])
 
 
 
-def importData():
-    global DATA_LIST
+def import_schedule_JSONs():
+    global _DATA_LIST
     print("Loading file info...")
-    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
+    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
 
 
     for filename in os.listdir(DATA_DIRECTORY):
         filename = os.path.join(DATA_DIRECTORY, filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
             file = readJSON(filename)
-            DATA_LIST.append(file)
+            _DATA_LIST.append(file)
             print(filename)
 
 
     print("Writing data to image...")
-    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
-    for i in DATA_LIST:
-        addName(i[0])
+    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+    for i in _DATA_LIST:
+        add_name(i[0])
     
 
 
 
-def linesAndText():
+def draw_lines_and_text():
 
 
-    def drawDayLines():
-        global TIME_COLUMN_WIDTH
+    def draw_day_lines():
+        global _TIME_COLUMN_WIDTH
         for i in range(5):
-            colNo = TIME_COLUMN_WIDTH*i + 400*i
-            for j in range(len(grid)-4):
-                for k in range(len(grid[0])):
+            colNo = _TIME_COLUMN_WIDTH*i + 400*i
+            for j in range(len(_GRID)-4):
+                for k in range(len(_GRID[0])):
                     if (j == colNo):
-                        grid[j][k] = (0, 0, 0)
-                        grid[j+1][k] = (0, 0, 0)
-                        grid[j+2][k] = (0, 0, 0)
-                        grid[j+3][k] = (0, 0, 0)
-                        grid[j+4][k] = (0, 0, 0)
-            colNo = TIME_COLUMN_WIDTH*(i+1) + 400*i
-            for j in range(len(grid)-4):
-                for k in range(len(grid[0])):
+                        _GRID[j][k] = (0, 0, 0)
+                        _GRID[j+1][k] = (0, 0, 0)
+                        _GRID[j+2][k] = (0, 0, 0)
+                        _GRID[j+3][k] = (0, 0, 0)
+                        _GRID[j+4][k] = (0, 0, 0)
+            colNo = _TIME_COLUMN_WIDTH*(i+1) + 400*i
+            for j in range(len(_GRID)-4):
+                for k in range(len(_GRID[0])):
                     if (j == colNo):
-                        grid[j][k] = (0, 0, 0)
-                        grid[j+1][k] = (0, 0, 0)
-                        grid[j+2][k] = (0, 0, 0)
-                        grid[j+3][k] = (0, 0, 0)
-                        grid[j+4][k] = (0, 0, 0)
+                        _GRID[j][k] = (0, 0, 0)
+                        _GRID[j+1][k] = (0, 0, 0)
+                        _GRID[j+2][k] = (0, 0, 0)
+                        _GRID[j+3][k] = (0, 0, 0)
+                        _GRID[j+4][k] = (0, 0, 0)
 
 
-    def drawHorizontalLines():
-        global SPACERPIXELS
-        for i in range(len(TIMES) + int(SPACERPIXELS/15)):
+    def draw_horizontal_lines():
+        global SPACER_PIXELS
+        for i in range(len(TIMES) + int(SPACER_PIXELS/15)):
             i *= 15
             if (i % 2 == 0):
                 for j in range(WIDTH):
-                    grid[j][i] = (0, 0, 0)
+                    _GRID[j][i] = (0, 0, 0)
         
 
-    def writeNameText(names, img):
-        global TIME_COLUMN_WIDTH
+    def write_name_text(_NAMES, img):
+        global _TIME_COLUMN_WIDTH
         for day in range(5):
-            for i in range(len(names)):
-                writeText(img, names[i][0], (TIME_COLUMN_WIDTH*(day+1) + 10 + 400/len(names)*i + 400*day, 1+15), fontSize = TEXT_FONT_SIZE)    
+            for i in range(len(_NAMES)):
+                writeText(img, _NAMES[i][0], (_TIME_COLUMN_WIDTH*(day+1) + 10 + 400/len(_NAMES)*i + 400*day, 1+15), fontSize = FONT_SIZE)    
     
 
-    def writeWeekdayText(img):
+    def write_weekday_text(img):
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         for i in range(len(days)):
-            writeText(img, days[i], ((400 + TIME_COLUMN_WIDTH + 10 )/2 + 400*i + TIME_COLUMN_WIDTH*i, 1), fontSize = TEXT_FONT_SIZE)
+            writeText(img, days[i], ((400 + _TIME_COLUMN_WIDTH + 10 )/2 + 400*i + _TIME_COLUMN_WIDTH*i, 1), fontSize = FONT_SIZE)
     
 
-    def writeTimeText(img, xPos):
-        global WIDTH, TIMES, SPACERPIXELS
+    def write_time_text(img, xPos):
+        global WIDTH, TIMES, SPACER_PIXELS
         for i in range(len(TIMES)):
             if (i % 2 == 0):
-                writeText(img, TIMES[i], (xPos + 10, i * 15 + SPACERPIXELS + 7.5), fontSize = TEXT_FONT_SIZE)
+                writeText(img, TIMES[i], (xPos + 10, i * 15 + SPACER_PIXELS + 7.5), fontSize = FONT_SIZE)
 
                 
-    print("Writing grid into image")
-    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
-    drawDayLines()
-    drawHorizontalLines()
+    print("Writing _GRID into image")
+    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+    draw_day_lines()
+    draw_horizontal_lines()
     print("Completing the formatting...")
-    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
-    img = toImage(grid)
+    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+    img = toImage(_GRID)
     for i in range(5):
-        writeTimeText(img, (400 + TIME_COLUMN_WIDTH) * i)
-    writeNameText(names, img)
-    writeWeekdayText(img)
+        write_time_text(img, (400 + _TIME_COLUMN_WIDTH) * i)
+    write_name_text(_NAMES, img)
+    write_weekday_text(img)
     return img
 
 
 
 def main():
-    global DATA_LIST
+    global _DATA_LIST
 
-    importData()
-    for i in DATA_LIST:
-        writeFile(i)
-    img = linesAndText()
+    import_schedule_JSONs()
+    for i in _DATA_LIST:
+        write_to_image(i)
+    img = draw_lines_and_text()
     img.show()
     print("Saving...")
     img.save(OUTPUT_DIRECTORY + "/scheduleTest.jpg")
 
-    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
+    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
     print("PROGRAM HAS TERMINATED")
 
 
