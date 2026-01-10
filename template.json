@@ -13,7 +13,6 @@
   [[16, 15], [18, 0], "T", "Glee Club"],
   [[16, 30], [18, 0], "R", "Glee Club"],
   [[16, 15], [17, 30], "TR", "Workout"],
-  [[16, 15], [18, 0], "M", "Women's Chorale"],
-  [[16, 30], [18, 0], "W", "Women's Chorale"],
+  [[16, 30], [18, 0], "MW", "Women's Chorale"],
   [[7, 0], [23, 0], "MTWRF", "PAIN 499"]
 ]

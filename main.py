@@ -19,7 +19,7 @@ OUTPUT_DIRECTORY = input("Enter the output directory path:\n")
 if (OUTPUT_DIRECTORY == ""):
     OUTPUT_DIRECTORY = "C:/Users/" + os.getlogin() + "/Desktop"
 
-START_TIME = time.time()
+APPLICATION_START_TIME = time.time()
 
 COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
 (220, 20, 60), # Crimson
@@ -36,15 +36,43 @@ COLORS = [ # These colors were selected from the standard CSS Colors, also calle
 (169, 169, 169) # Dark Gray
 ]
 
+def generate_times(start_time, end_time):
+    times = []
+    start_min = start_time[0] * 60 + start_time[1]
+    end_min = end_time[0] * 60 + end_time[1]
+    current = start_min
+    while current <= end_min:
+        hour = current // 60
+        minute = current % 60
+        if hour == 0:
+            display_hour = 12
+            ampm = "AM"
+        elif hour < 12:
+            display_hour = hour
+            ampm = "AM"
+        elif hour == 12:
+            display_hour = 12
+            ampm = "PM"
+        else:
+            display_hour = hour - 12
+            ampm = "PM"
+        time_str = f"{display_hour}:{minute:02d} {ampm}"
+        times.append(time_str)
+        current += 15
+    return times
+
 # Adding or subtracting from this list will change the time slots on the output image with no other code changes needed
-TIMES = ["7:00 AM", "7:15 AM", "7:30 AM", "7:45 AM", "8:00 AM", "8:15 AM", "8:30 AM", "8:45 AM", "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM", "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM", "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM", "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM", "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM", "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM", "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM", "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM", "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM", "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM", "7:00 PM", "7:15 PM", "7:30 PM", "7:45 PM", "8:00 PM", "8:15 PM", "8:30 PM", "8:45 PM", "9:00 PM", "9:15 PM", "9:30 PM", "9:45 PM", "10:00 PM"] # len = 162-4
+
 
 # Declare global variables having to do with output image spacing, size, and formatting
 TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
 SPACERPIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
+TEXT_FONT_SIZE = 13
+START_TIME = [7, 0] # 7:00 AM
+END_TIME = [22, 0] # 10:00 PM
+TIMES = generate_times(START_TIME, END_TIME)
 WIDTH = 1850 + 180 + 5 * TIME_COLUMN_WIDTH # was 3600 # then was 1800
 HEIGHT = (len(TIMES) + 1) * 15 + SPACERPIXELS # (len(TIMES) + 1) rows * 15 pixels/row
-TEXT_FONT_SIZE = 13
 
 grid = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
 names = [] # List of tuples in the form (name, (R, G, B))
@@ -66,10 +94,12 @@ def addClass(name, startTime, stopTime, daysStr):
     def defineBlock(startTime, stopTime, columnNo, weekday):
         
         def timeToY(time):
+            "Convert a time in [hours, minutes] format to a y coordinate on the image grid."
             global SPACERPIXELS, TIME_COLUMN_WIDTH
             hours, minutes = time  
-            hours -= 7           
-            minutes += 60 * hours  
+            hours -= START_TIME[0]      
+            minutes += 60 * hours
+            minutes -= START_TIME[1]
             y = minutes 
             y = int(y)
             y = y + SPACERPIXELS
@@ -126,19 +156,19 @@ def writeFile(data):
 def importData():
     global DATA_LIST
     print("Loading file info...")
-    print("Elapsed time:", time.time()- START_TIME, "s")
+    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
 
 
     for filename in os.listdir(DATA_DIRECTORY):
         filename = os.path.join(DATA_DIRECTORY, filename)
-        print(filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
             file = readJSON(filename)
             DATA_LIST.append(file)
+            print(filename)
 
 
     print("Writing data to image...")
-    print("Elapsed time:", time.time()- START_TIME, "s")
+    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
     for i in DATA_LIST:
         addName(i[0])
     
@@ -201,11 +231,11 @@ def linesAndText():
 
                 
     print("Writing grid into image")
-    print("Elapsed time:", time.time()- START_TIME, "s")
+    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
     drawDayLines()
     drawHorizontalLines()
     print("Completing the formatting...")
-    print("Elapsed time:", time.time()- START_TIME, "s")
+    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
     img = toImage(grid)
     for i in range(5):
         writeTimeText(img, (400 + TIME_COLUMN_WIDTH) * i)
@@ -226,7 +256,7 @@ def main():
     print("Saving...")
     img.save(OUTPUT_DIRECTORY + "/scheduleTest.jpg")
 
-    print("Elapsed time:", time.time()- START_TIME, "s")
+    print("Elapsed time:", time.time()- APPLICATION_START_TIME, "s")
     print("PROGRAM HAS TERMINATED")
 
 
