@@ -4,10 +4,8 @@ import subprocess
 import os
 
 def check_dependencies():
-    # Attempt to import the module
     try:
-        import PIL
-        print("PIL is already installed.")
+        from PIL import Image, ImageDraw, ImageFont
     except ImportError:
         print("PIL not found. Installing Pillow...")
         try:
@@ -24,17 +22,11 @@ def check_dependencies():
             print(f"CRITICAL ERROR: Could not install Pillow. Details: {e}")
             sys.exit(1)
 
-# 1. Run the check at the very top
+
 check_dependencies()
 
-import PIL
-# --- Your Main Script Below ---
-print("Script is running with PIL version:", PIL.__version__)
-
-# --- Your main script code goes here ---
-
-
 from PIL import Image, ImageDraw, ImageFont
+
 
 def toGrid(image):
     pixels = image.load()
