@@ -39,7 +39,7 @@ SCHEDULE_COLUMN_WIDTH = config['schedule_column_width'] # Width in pixels of eac
 TIME_COLUMN_WIDTH = config['time_column_width'] # defaults to 73, which is 75 minus a 2-pixel border
 ROW_HEIGHT = config['row_height'] # Height in pixels of each time row
 DATA_DIRECTORY = config['data_directory'] # Directory where schedule JSON files are stored
-OUTPUT_DIRECTORY = config['output_directory'] # Directory where the program outputs the file
+OUTPUT_PATH = config['output_path'] # Directory where the program outputs the file
 
 
 
@@ -255,8 +255,8 @@ def main():
         write_to_image(i)
     img = draw_lines_and_text()
     img.show()
-    print("Saving to", OUTPUT_DIRECTORY + "/scheduleTest.jpg")
-    img.save(OUTPUT_DIRECTORY + "/scheduleTest.jpg")
+    print("Saving to", OUTPUT_PATH)
+    img.save(OUTPUT_PATH)
 
     print("Elapsed time:", time.time() - _APPLICATION_START_TIME, "s")
     print("PROGRAM HAS TERMINATED")
