@@ -11,12 +11,8 @@ def check_dependencies():
         try:
             # Install the package
             subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
-            
             print("Installation successful. Restarting script to apply changes...")
             print("-" * 50)
-            
-            # Restart the current script entirely
-            # This forces Python to reload all modules from scratch
             os.execv(sys.executable, [sys.executable] + sys.argv)
         except Exception as e:
             print(f"CRITICAL ERROR: Could not install Pillow. Details: {e}")
