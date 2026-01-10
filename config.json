@@ -5,6 +5,8 @@
     "spacer_pixels": 30,
     "schedule_column_width": 400,
     "time_column_width": 73,
-    "row_height": 15
+    "row_height": 15,
+    "data_directory": "C:\\Users\\abrah\\.__Scheduler App Data__",
+    "output_directory": "C:\\Users\\abrah\\Desktop"
 }
 

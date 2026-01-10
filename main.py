@@ -12,14 +12,6 @@ import json
 
 #------------------------------ GLOBAL VARIABLES [USER PREFERENCES] ------------------------------#    
 
-# Get user input for where to find and save files
-DATA_DIRECTORY = input("Enter the directory path for your schedule data files:\n")
-if (DATA_DIRECTORY == ""):
-    DATA_DIRECTORY = "C:\\Users\\" + os.getlogin() + "\\.__Scheduler App Data__" # Note that this assumes Windows OS. For a Linux machine, write "~/.__Scheduler App Data__"
-OUTPUT_DIRECTORY = input("Enter the output directory path:\n")
-if (OUTPUT_DIRECTORY == ""):
-    OUTPUT_DIRECTORY = "C:\\Users\\" + os.getlogin() + "\\Desktop"
-
 COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
 (220, 20, 60), # Crimson
 (255, 69, 0), # Orange Red
@@ -46,6 +38,9 @@ SPACER_PIXELS = config['spacer_pixels'] # Number of pixels to be inserted at the
 SCHEDULE_COLUMN_WIDTH = config['schedule_column_width'] # Width in pixels of each day's schedule column
 TIME_COLUMN_WIDTH = config['time_column_width'] # defaults to 73, which is 75 minus a 2-pixel border
 ROW_HEIGHT = config['row_height'] # Height in pixels of each time row
+DATA_DIRECTORY = config['data_directory'] # Directory where schedule JSON files are stored
+OUTPUT_DIRECTORY = config['output_directory'] # Directory where the program outputs the file
+
 
 
 #------------------------------ GLOBAL VARIABLES [PROGRAM USE ONLY - DO NOT EDIT] ------------------------------# 
