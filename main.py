@@ -38,6 +38,9 @@ FONT_SIZE = 13
 START_TIME = [7, 0] # 7:00 AM
 END_TIME = [22, 0] # 10:00 PM
 SPACER_PIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
+SCHEDULE_COLUMN_WIDTH = 400 # Width in pixels of each day's schedule column
+TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
+ROW_HEIGHT = 15 # Height in pixels of each time row
 
 
 
@@ -71,9 +74,8 @@ def generate_times(start_time, end_time):
     return times
 
 TIMES = generate_times(START_TIME, END_TIME)
-_TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
-WIDTH = 1850 + 180 + 5 * _TIME_COLUMN_WIDTH # was 3600 # then was 1800
-HEIGHT = (len(TIMES) + 1) * 15 + SPACER_PIXELS # (len(TIMES) + 1) rows * 15 pixels/row
+WIDTH =  5 * (SCHEDULE_COLUMN_WIDTH + TIME_COLUMN_WIDTH) # 5 days
+HEIGHT = (len(TIMES) + 1) * ROW_HEIGHT + SPACER_PIXELS # (len(TIMES) + 1) rows 
 _GRID = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
 _NAMES = [] # List of tuples in the form (name, (R, G, B))
 
@@ -95,7 +97,7 @@ def add_time_block(name, startTime, stopTime, daysStr):
 
         def time_to_y(time):
             "Convert a time in [hours, minutes] format to a y coordinate on the image _GRID."
-            global SPACER_PIXELS, _TIME_COLUMN_WIDTH
+            global SPACER_PIXELS, TIME_COLUMN_WIDTH
             hours, minutes = time  
             hours -= START_TIME[0]      
             minutes += 60 * hours
@@ -108,8 +110,8 @@ def add_time_block(name, startTime, stopTime, daysStr):
         startY = time_to_y(startTime)
         stopY = time_to_y(stopTime)
 
-        startX = 400/len(_NAMES) * columnNo + _TIME_COLUMN_WIDTH * (weekday+1) + 400*weekday
-        stopX = startX + 400/len(_NAMES)
+        startX = SCHEDULE_COLUMN_WIDTH/len(_NAMES) * columnNo + TIME_COLUMN_WIDTH * (weekday+1) + SCHEDULE_COLUMN_WIDTH*weekday
+        stopX = startX + SCHEDULE_COLUMN_WIDTH/len(_NAMES)
 
         return [(startX, startY), (stopX, stopY)]
 
@@ -181,9 +183,9 @@ def draw_lines_and_text():
 
 
     def draw_day_lines():
-        global _TIME_COLUMN_WIDTH
+        global TIME_COLUMN_WIDTH
         for i in range(5):
-            colNo = _TIME_COLUMN_WIDTH*i + 400*i
+            colNo = TIME_COLUMN_WIDTH*i + 400*i
             for j in range(len(_GRID)-4):
                 for k in range(len(_GRID[0])):
                     if (j == colNo):
@@ -192,7 +194,7 @@ def draw_lines_and_text():
                         _GRID[j+2][k] = (0, 0, 0)
                         _GRID[j+3][k] = (0, 0, 0)
                         _GRID[j+4][k] = (0, 0, 0)
-            colNo = _TIME_COLUMN_WIDTH*(i+1) + 400*i
+            colNo = TIME_COLUMN_WIDTH*(i+1) + 400*i
             for j in range(len(_GRID)-4):
                 for k in range(len(_GRID[0])):
                     if (j == colNo):
@@ -206,30 +208,30 @@ def draw_lines_and_text():
     def draw_horizontal_lines():
         global SPACER_PIXELS
         for i in range(len(TIMES) + int(SPACER_PIXELS/15)):
-            i *= 15
+            i *= ROW_HEIGHT
             if (i % 2 == 0):
                 for j in range(WIDTH):
                     _GRID[j][i] = (0, 0, 0)
         
 
     def write_name_text(_NAMES, img):
-        global _TIME_COLUMN_WIDTH
+        global TIME_COLUMN_WIDTH
         for day in range(5):
             for i in range(len(_NAMES)):
-                writeText(img, _NAMES[i][0], (_TIME_COLUMN_WIDTH*(day+1) + 10 + 400/len(_NAMES)*i + 400*day, 1+15), fontSize = FONT_SIZE)    
+                writeText(img, _NAMES[i][0], (TIME_COLUMN_WIDTH*(day+1) + 10 + 400/len(_NAMES)*i + 400*day, 1+15), fontSize = FONT_SIZE)    
     
 
     def write_weekday_text(img):
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         for i in range(len(days)):
-            writeText(img, days[i], ((400 + _TIME_COLUMN_WIDTH + 10 )/2 + 400*i + _TIME_COLUMN_WIDTH*i, 1), fontSize = FONT_SIZE)
+            writeText(img, days[i], ((SCHEDULE_COLUMN_WIDTH + TIME_COLUMN_WIDTH + 10 )/2 + SCHEDULE_COLUMN_WIDTH*i + TIME_COLUMN_WIDTH*i, 1), fontSize = FONT_SIZE)
     
 
     def write_time_text(img, xPos):
         global WIDTH, TIMES, SPACER_PIXELS
         for i in range(len(TIMES)):
             if (i % 2 == 0):
-                writeText(img, TIMES[i], (xPos + 10, i * 15 + SPACER_PIXELS + 7.5), fontSize = FONT_SIZE)
+                writeText(img, TIMES[i], (xPos + 10, i * ROW_HEIGHT + SPACER_PIXELS + ROW_HEIGHT/2), fontSize = FONT_SIZE)
 
 
     print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")       
@@ -240,7 +242,7 @@ def draw_lines_and_text():
     print("Completing the formatting...")
     img = toImage(_GRID)
     for i in range(5):
-        write_time_text(img, (400 + _TIME_COLUMN_WIDTH) * i)
+        write_time_text(img, (SCHEDULE_COLUMN_WIDTH + TIME_COLUMN_WIDTH) * i)
     write_name_text(_NAMES, img)
     write_weekday_text(img)
     return img
