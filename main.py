@@ -42,7 +42,9 @@ SPACER_PIXELS = 30 # Number of pixels to be inserted at the top of the sheet; ad
 
 
 #------------------------------ GLOBAL VARIABLES [PROGRAM USE ONLY - DO NOT EDIT] ------------------------------# 
-  
+
+_APPLICATION_START_TIME = time.time()
+
 def generate_times(start_time, end_time):
     times = []
     start_min = start_time[0] * 60 + start_time[1]
@@ -72,12 +74,8 @@ TIMES = generate_times(START_TIME, END_TIME)
 _TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
 WIDTH = 1850 + 180 + 5 * _TIME_COLUMN_WIDTH # was 3600 # then was 1800
 HEIGHT = (len(TIMES) + 1) * 15 + SPACER_PIXELS # (len(TIMES) + 1) rows * 15 pixels/row
-_APPLICATION_START_TIME = time.time()
 _GRID = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
 _NAMES = [] # List of tuples in the form (name, (R, G, B))
-_DATA_LIST = [] # List of data files, formatted as lists from the JSON converter
-
-
 
 
 
@@ -158,24 +156,24 @@ def write_to_image(data):
 
 
 def import_schedule_JSONs():
-    global _DATA_LIST
-    print("Loading file info...")
+    schedules_list = []
     print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+    print("Loading file info...")
 
 
     for filename in os.listdir(DATA_DIRECTORY):
         filename = os.path.join(DATA_DIRECTORY, filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
             file = readJSON(filename)
-            _DATA_LIST.append(file)
+            schedules_list.append(file)
             print(filename)
 
-
-    print("Writing data to image...")
     print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
-    for i in _DATA_LIST:
+    print("Writing data to image...")
+    for i in schedules_list:
         add_name(i[0])
     
+    return schedules_list
 
 
 
@@ -233,13 +231,13 @@ def draw_lines_and_text():
             if (i % 2 == 0):
                 writeText(img, TIMES[i], (xPos + 10, i * 15 + SPACER_PIXELS + 7.5), fontSize = FONT_SIZE)
 
-                
-    print("Writing _GRID into image")
-    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+
+    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")       
+    print("Writing grid into image")
     draw_day_lines()
     draw_horizontal_lines()
-    print("Completing the formatting...")
     print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+    print("Completing the formatting...")
     img = toImage(_GRID)
     for i in range(5):
         write_time_text(img, (400 + _TIME_COLUMN_WIDTH) * i)
@@ -250,17 +248,16 @@ def draw_lines_and_text():
 
 
 def main():
-    global _DATA_LIST
 
-    import_schedule_JSONs()
-    for i in _DATA_LIST:
+    schedules = import_schedule_JSONs()
+    for i in schedules:
         write_to_image(i)
     img = draw_lines_and_text()
     img.show()
-    print("Saving...")
+    print("Saving to", OUTPUT_DIRECTORY + "/scheduleTest.jpg")
     img.save(OUTPUT_DIRECTORY + "/scheduleTest.jpg")
 
-    print("Elapsed time:", time.time()- _APPLICATION_START_TIME, "s")
+    print("Elapsed time:", time.time() - _APPLICATION_START_TIME, "s")
     print("PROGRAM HAS TERMINATED")
 
 
