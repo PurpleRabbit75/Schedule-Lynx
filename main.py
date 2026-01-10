@@ -3,7 +3,6 @@
 #------------------------------ IMPORTS ------------------------------#
 
 from ImageLib2 import *
-from ListLib import *
 import time
 import os
 import json
@@ -153,7 +152,8 @@ def import_schedule_JSONs():
     for filename in os.listdir(DATA_DIRECTORY):
         filename = os.path.join(DATA_DIRECTORY, filename)
         if (filename != DATA_DIRECTORY + "\\Scheduler App Archives"):
-            file = readJSON(filename)
+            with open(filename, 'r') as jsonFile:
+                file = json.load(jsonFile)
             schedules_list.append(file)
             print(filename)
 
