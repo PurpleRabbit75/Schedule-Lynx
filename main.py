@@ -10,23 +10,11 @@ import json
 
 
 
-#------------------------------ GLOBAL VARIABLES [USER PREFERENCES] ------------------------------#    
+#------------------------------ GLOBAL VARIABLES [USER PREFERENCES FROM config.json] ------------------------------#    
 
-COLORS = [ # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
-(220, 20, 60), # Crimson
-(255, 69, 0), # Orange Red
-(255, 140, 0), # Dark Orange
-(255, 215, 0), # Gold
-(50, 205, 50), # Lime Green
-(30, 144, 255), # Dodger Blue
-(0, 0, 205), # Medium Blue
-(75, 0, 130), # Indigo
-(138, 43, 226), # Blue Violet
-(255, 105, 180), # Hot Pink
-(160, 82, 45), # Sienna
-(169, 169, 169) # Dark Gray
-]
-
+# These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
+with open('colors.json', 'r') as file:
+    COLORS = [tuple(color) for color in list(json.load(file).values())]
 
 with open('config.json', 'r') as file:
     config = json.load(file)
