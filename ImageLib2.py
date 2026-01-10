@@ -1,3 +1,33 @@
+import sys
+import subprocess
+import importlib
+
+def install_and_import(package_name, import_name):
+    try:
+        # Check if the module can be imported
+        importlib.import_module(import_name)
+        print(f"'{import_name}' is already installed.")
+    except ImportError:
+        print(f"'{import_name}' not found. Installing '{package_name}'...")
+        try:
+            # Use subprocess to run the pip install command
+            # sys.executable ensures we use the pip associated with the CURRENT Python interpreter
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+            
+            # Ensure the module is available in the current session
+            importlib.invalidate_caches()
+            importlib.import_module(import_name)
+            print(f"Successfully installed '{package_name}'.")
+        except Exception as e:
+            print(f"Failed to install '{package_name}'. Error: {e}")
+            sys.exit(1)
+
+install_and_import("Pillow", "PIL")
+
+# --- Your main script code goes here ---
+from PIL import Image
+print("PIL is ready to use!")
+
 from PIL import Image, ImageDraw, ImageFont
 
 def toGrid(image):
