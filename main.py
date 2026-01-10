@@ -6,6 +6,7 @@ from ImageLib2 import *
 from ListLib import *
 import time
 import os
+import json
 
 
 
@@ -34,14 +35,17 @@ COLORS = [ # These colors were selected from the standard CSS Colors, also calle
 (169, 169, 169) # Dark Gray
 ]
 
-FONT_SIZE = 13
-START_TIME = [7, 0] # 7:00 AM
-END_TIME = [22, 0] # 10:00 PM
-SPACER_PIXELS = 30 # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
-SCHEDULE_COLUMN_WIDTH = 400 # Width in pixels of each day's schedule column
-TIME_COLUMN_WIDTH = 73 # 73 is 75 minus a 2-pixel border
-ROW_HEIGHT = 15 # Height in pixels of each time row
 
+with open('config.json', 'r') as file:
+    config = json.load(file)
+
+FONT_SIZE = config['font_size'] # defaults to 13
+START_TIME = config['start_time'] # defaults to 7:00 AM
+END_TIME = config['end_time'] # defaults to 10:00 PM
+SPACER_PIXELS = config['spacer_pixels'] # Number of pixels to be inserted at the top of the sheet; added directly to the y position from the top of all blocks.
+SCHEDULE_COLUMN_WIDTH = config['schedule_column_width'] # Width in pixels of each day's schedule column
+TIME_COLUMN_WIDTH = config['time_column_width'] # defaults to 73, which is 75 minus a 2-pixel border
+ROW_HEIGHT = config['row_height'] # Height in pixels of each time row
 
 
 #------------------------------ GLOBAL VARIABLES [PROGRAM USE ONLY - DO NOT EDIT] ------------------------------# 
@@ -75,7 +79,7 @@ def generate_times(start_time, end_time):
 
 TIMES = generate_times(START_TIME, END_TIME)
 WIDTH =  5 * (SCHEDULE_COLUMN_WIDTH + TIME_COLUMN_WIDTH) # 5 days
-HEIGHT = (len(TIMES) + 1) * ROW_HEIGHT + SPACER_PIXELS # (len(TIMES) + 1) rows 
+HEIGHT = (len(TIMES) + 1) * ROW_HEIGHT + SPACER_PIXELS # (len(TIMES) + 1) = number of rows 
 _GRID = [[(255, 255, 255) for _ in range(HEIGHT)] for _ in range(WIDTH)]
 _NAMES = [] # List of tuples in the form (name, (R, G, B))
 
