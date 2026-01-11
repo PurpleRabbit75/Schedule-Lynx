@@ -22,7 +22,7 @@ Schedule Lynx takes in a pile of .json files and spits out a .jpg file. You spec
 ## Standard Operating Proceedure
 
 ### Adding Schedule JSON Files
-To create a new schedule, first create a new folder. In this folder, place at least two `person.json` files. You can create a `person.json` file by copying the `person_template.json` file and editing it to match the schedule of any given person. (NB! People new to JSON usually miss the commas. Pay attention to them!)
+To create a new schedule, you will need to edit the files in the "data" folder. In this folder, place at least two `person.json` files. You can create a `person.json` file by copying the `person_template.json` file and editing it to match the schedule of any given person. (NB! People new to JSON usually miss the commas. Pay attention to them!)
 
 The first entry in a `person.json` file must be their name. 
 Every subsequent entry in the `person.json` file represents an event recurring at least once a week.
@@ -44,23 +44,15 @@ The fourth entry is a comment field. You can put anything you want there, and as
 
 ### Adjusting Config Files
 
-Once you have created the folder with your `person.json` files, copy the file path to it and open the `config.json` file located in this repository. You can open it with a coding application like VS Code, or with a simple text editor like Notepad or Vim. Inside the `config.json` file, adjust the following parameters:
-
-- Set the portion after the colon of this parameter to the path you just copied:
-```
-"data_directory": "C:/Users/abrah/.__Scheduler App Data__",
-```
-- Choose a file path for the new .jpg file that the program will create. Put this file path in the place of the filepath in
-```
- "output_path": "C:/Users/abrah/Desktop/scheduleTest.jpg"
- ```
-
- You may later choose to adjust the other parameters as you see fit. More about each parameter will be explained in the technical appendix. 
+ You may later choose to adjust the `config.json` and `colors.json` files as you see fit. More about them will be explained in the technical appendix. 
 
  ### Running the Program
- To launch the program, right-click on `main.py` and open it with the app `Python 3.###.##` (where # represents any number). You can also launch it from Terminal, or VS Code, or IDLE, or anything you please. If you open in in an IDE, you will see diagnotics printing. Otherwise, you will see a window open and immediately close.
 
- There should now be a new .jpg image file wherever you specified that the file should be created!
+ To launch the program, simply run the `main.py` file. The simple way to do this is to open Terminal, navigate to the Schedule-Lynx directory, and run `python3 main.py`. You can also run it from within an IDE like IDLE or VS Code.
+ You will see a number of status updates printing to your terminal. Then, it will say 
+`PROGRAM HAS TERMINATED`
+
+ There should now be a new schedule.jpg file in the Schedule-Lynx folder!
 
   
 
