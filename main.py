@@ -12,10 +12,10 @@ import json
 #------------------------------ GLOBAL VARIABLES [USER PREFERENCES FROM config.json] ------------------------------#    
 
 # These colors were selected from the standard CSS Colors, also called Web Colors. Rearranging the order of these will rearrange the order of the colors on the output image
-with open('colors.json', 'r') as file:
+with open('config/colors.json', 'r') as file:
     COLORS = [tuple(color) for color in list(json.load(file).values())]
 
-with open('config.json', 'r') as file:
+with open('config/config.json', 'r') as file:
     config = json.load(file)
 
 FONT_SIZE = config['font_size'] # defaults to 13
