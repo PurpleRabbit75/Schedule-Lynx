@@ -1,6 +1,6 @@
 # Schedule Lynx
 
-![alt text](https://github.com/PurpleRabbit75/Schedule-Lynx/blob/main/Gemini_Generated_Image_li31b4li31b4li31.png?raw=true)
+![alt text](https://github.com/PurpleRabbit75/Schedule-Lynx/blob/main/Miscellaneous-Developer-Stuff/Schedule-Lynx-icon.png?raw=true)
 
 ## Quick Summary
 
@@ -54,7 +54,7 @@ The fourth entry is a comment field. You can put anything you want there, and as
 
  There should now be a new schedule.jpg file in the Schedule-Lynx folder!
 
-  
+  Included in the Github is _also_ an .exe file. The function of this file is to run the file located in the same directory as the .exe that is named `main.py`. The source code for this is available in the `Miscellaneous-Developer-Stuff` directory.
 
  # Technical Appendix
 
