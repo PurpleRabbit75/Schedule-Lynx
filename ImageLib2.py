@@ -56,7 +56,8 @@ def makeGrid(x, y, color = (255, 255, 255)):
         
 
 
-def writeText(image, String, coords, fontSize = 12, fontType = "arial.ttf", color = (0, 0, 0)):
+def writeText(image, String, coords, fontSize = 12, fontType = "config/font.ttf", color = (0, 0, 0)):
+    # fontType = "arial.ttf"
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(fontType, fontSize)
     draw.text(coords, String, fill = color, font = font)
