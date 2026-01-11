@@ -17,12 +17,12 @@ Congrats! Schedule Lynx is now installed! The remaining dependencies etc. will a
 
 ## Inputs and Outputs
 
-Schedule Lynx takes in a pile of .json files and spits out a .jpg file. You specify which files come from and go to which directories by editing config.json. There are more details on this in the next section.
+Schedule Lynx takes in a pile of .json files and spits out a .jpg file. You specify which files come from and go to which directories by editing `config.json`. There are more details on this in the next section.
 
 ## Standard Operating Proceedure
 
 ### Adding Schedule JSON Files
-To create a new schedule, you will need to edit the files in the "data" folder. In this folder, place at least two `person.json` files. You can create a `person.json` file by copying the `person_template.json` file and editing it to match the schedule of any given person. (NB! People new to JSON usually miss the commas. Pay attention to them!)
+To create a new schedule, you will need to edit the files in the `data` folder. In this folder, place at least two `person.json` files. You can create a `person.json` file by copying the `person_template.json` file and editing it to match the schedule of any given person. (NB! People new to JSON usually miss the commas. Pay attention to them!)
 
 The first entry in a `person.json` file must be their name. 
 Every subsequent entry in the `person.json` file represents an event recurring at least once a week.
@@ -42,6 +42,8 @@ The third entry is the "day string". Add letters or subtract them from this stri
 
 The fourth entry is a comment field. You can put anything you want there, and as of now, nothing will happen.
 
+Note that events on Saturday or Sunday are not currently supported.
+
 ### Adjusting Config Files
 
  You may later choose to adjust the `config.json` and `colors.json` files as you see fit. More about them will be explained in the technical appendix. 
@@ -60,8 +62,42 @@ The fourth entry is a comment field. You can put anything you want there, and as
 
 If you are reading this, I assume that you know what you're doing around .py and .json files, have some experience with coding, etc. 
 
+## API Documentation
+
+### config.json
+
+- font_size: default value = 13: represents the global font size of all the text in the image. Must be an integer
+- start_time: default value = [7, 0]: represents the earliest time value shown in the image. The format is [hours, minutes], where minutes go from 0 to 59 and hours go from 0 to 23. This, for example, is 7 AM. Errors may occur if event times are written in the `person.json` files outside of of the max and min times listed here.
+- end_time: default value = [22, 0]: represents the latest time value shown in the image. See previous for more details.
+- spacer_pixels: default value = 30: The number of whitespace pixels at the very top of the image. Must be integer. 
+- schedule_column_width: default value = 400: The width (in pixels) of each column which contains the colored schedule bars. Must be integer.
+- time_column_width: default value = 73: The width (in pixels) of each column which contains the time increments. Must be integer. Each discrete time column has a 1-pixel black border on each side, so the default of 73 is 75 pixels - 2 border pixels.
+- row_height: default value = 15: The height in pixels of each row. It's good to keep this at 15 pixels, because the rows are spaced 15 minutes apart in time, so 1 pixel maps to 1 minute. Must be integer.
+- data_directory: default value = "data": The directory containing your `person.json` files. You can make this anywhere you like--but don't include any other files in that directory that don't perfectly follow the `person.json` format or errors will ensue. (Eg. it is not advisable to make this path your Downloads folder)
+- output_path: default value = "schedule.jpg": Wherever this path points is where the output image will be saved. Make sure to keep the .jpg extension on the end, though--there are no checks on that, and I have no idea what the Pillow library might do with other formats. If you _really_ want to mess with this, the relevant "save file" code is at the end of `main.py`.
+
+### colors.json
+
+`colors.json` consists of a bunch of key-value pairs, formatted like this:
+```
+ "Crimson": [220, 20, 60]
+ ```
+The key is irrelevant to the code except as documentation. You can make it whatever you like.
+The value must be a valid RGB triple--that is, each number must be an integer between 0 and 255, inclusive. `[0, 0, 0]` is black and `[255, 255, 255]` is white. In this app, all the defaults are CSS Colors (aka HTML colors or Web colors), but they don't _have_ to be. 
+
+These particular colors were selected by an artistic friend of mine for purely aesthetic reasons. In an older draft of the code, I had the colors of each person's block coded into their personal file. This, however, resulted in utter chaos and _really_ bad looking outputs, so I went ahead and standardized it.
+
+If you're interested in messing with `colors.json`, note that which colors map to which person are decided by the order of the colors in this file. Swapping these around or changing the colors will change what color goes to whom. The order of the _people_ on the chart is actually decided by the filenames of the `person.json` files and your own filesystem. On my computer, filenames higher in the alphabet get read first, so I could change the order of the names on the output image by making my data directory tree look like this:
+```
+/data
+  ├── aPerson2.json
+  ├── bPerson3.json  
+  └── cPerson1.json  
+```
+
+The number of entries in `colors.json` determines the number of `person.json` files that the software can process. If you increase the former, you may increase the latter past 12. (If you do so, I also recommend increasing `schedule_column_width` in `config.json`)
+
 ## Miscellaneous Notes:
 
-- You can expand this for an arbitrary number of people by adding more entries to colors.json. 
 
 - This system is agnostic to the difference between \ and / when it comes to filepaths, but \ must be escaped in both JSON and Python.
