@@ -6,7 +6,7 @@
     "schedule_column_width": 400,
     "time_column_width": 73,
     "row_height": 15,
-    "data_directory": "C:/Users/abrah/.__Scheduler App Data__",
+    "data_directory": "data",
     "output_path": "scheduleTest.jpg"
 }
 
