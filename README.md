@@ -8,6 +8,8 @@ Schedule Lynx is a cross-platform project designed to help groups of 2-12 people
 
 ## Installation
 
+**Attention "Not Tech People"! Click [here](https://github.com/PurpleRabbit75/Schedule-Lynx/blob/main/HELP!.md) instead!**
+
 If you do not have Python 3 installed already on your system, you will need to install it first. See python.org for help on how to do this. Once it is installed, you may proceed with these instructions.
 
 To install Schedule Lynx, download it in any way you wish. You can click the green `<> Code` button above and download it as a zip, or git clone the repository if you're more comfortable with that. If you download it as a zip, unzip it. 
